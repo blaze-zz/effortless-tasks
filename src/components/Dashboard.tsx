@@ -6,13 +6,15 @@ import { TaskCard } from './TaskCard';
 import { CreateTaskDialog } from './CreateTaskDialog';
 import { CreateCategoryDialog } from './CreateCategoryDialog';
 import { DailyView } from './DailyView';
+import { HabitTracker } from './HabitTracker';
+import { ProgressTracker } from './ProgressTracker';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, LogOut, ListTodo, Clock, CheckCheck, X, CalendarDays, LayoutList } from 'lucide-react';
+import { CheckCircle2, LogOut, ListTodo, Clock, CheckCheck, X, CalendarDays, LayoutList, Repeat, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Dashboard() {
-  const [view, setView] = useState<'daily' | 'all'>('daily');
+  const [view, setView] = useState<'daily' | 'all' | 'habits' | 'progress'>('daily');
   const { user, signOut } = useAuth();
   const { tasks, isLoading: tasksLoading } = useTasks();
   const { categories, isLoading: categoriesLoading, deleteCategory } = useCategories();
@@ -77,7 +79,25 @@ export function Dashboard() {
               className="gap-2"
             >
               <LayoutList className="w-4 h-4" />
-              All Tasks
+              Tasks
+            </Button>
+            <Button
+              variant={view === 'habits' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setView('habits')}
+              className="gap-2"
+            >
+              <Repeat className="w-4 h-4" />
+              Habits
+            </Button>
+            <Button
+              variant={view === 'progress' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setView('progress')}
+              className="gap-2"
+            >
+              <BarChart3 className="w-4 h-4" />
+              Progress
             </Button>
           </div>
           <div className="flex items-center gap-4 text-sm">
@@ -128,6 +148,10 @@ export function Dashboard() {
           </div>
         ) : view === 'daily' ? (
           <DailyView tasks={tasks} categories={categories} />
+        ) : view === 'habits' ? (
+          <HabitTracker />
+        ) : view === 'progress' ? (
+          <ProgressTracker />
         ) : (
           <>
             {/* Tasks */}
